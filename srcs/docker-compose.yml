@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   nginx:
     container_name: nginx
@@ -8,7 +8,7 @@ services:
       - "443:443"
     restart: on-failure
     volumes: 
-      - wordpress_data:/usr/share/nginx/html/
+      - wp:/usr/share/nginx/html/
     networks: 
       - inception
     depends_on: 
@@ -18,8 +18,10 @@ services:
     build: ./requirements/wordpress
     env_file: .env
     restart: on-failure
+    expose:
+      - "9000"
     volumes: 
-      - wordpress_data:/var/www/wordpress
+      - wp:/var/www/wordpress
     depends_on: 
       - mariadb
     networks: 
@@ -28,19 +30,21 @@ services:
     container_name: mariadb
     build: ./requirements/mariadb
     env_file: .env
+    expose:
+      - "3306"
     volumes: 
-      - /home/shukk/data/mariadb:/var/lib/mysql/
-    restart: on-failure
+      - /home/gponcele/data/mariadb:/var/lib/mysql/
+    restart: unless-stopped
     networks: 
       - inception
 
 volumes:
-  wordpress_data:
+  wp:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/shukk/data/wordpress'
+      device: '/home/gponcele/data/wordpress'
 
 networks:
   inception:

@@ -1,7 +1,9 @@
-FROM debian:buster
+FROM debian:oldstable
+
+EXPOSE 443
 
 RUN apt-get update \
-	&& apt-get upgrade \
+	&& apt-get upgrade -y \
 	&& apt-get install nginx -y \
 	&& apt-get install openssl -y \
 	&& apt-get clean
@@ -9,13 +11,13 @@ RUN apt-get update \
 RUN mkdir -p /etc/nginx/ssl \
 	&& mkdir -p /var/run/nginx
 
-RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 \
+RUN openssl req -x509 \
 	-nodes \
 	-out /etc/nginx/ssl/inception.crt \
 	-keyout /etc/nginx/ssl/inception.key \
-	-subj "/C=BE/ST=BR-C/L=BR/O=19/OU=19/CN=gponcele.42.fr/UID=shukk"
+	-subj "/C=BE/ST=BR-C/L=BR/O=19/OU=19/CN=gponcele.42.fr/UID=gponcele"
 
-COPY conf/nginx.conf /etc/nginx/conf.d/inception.conf
+COPY conf/nginx.conf /etc/nginx/conf.d
 
 RUN chmod 755 /var/www/html \
 	&& chown -R www-data:www-data /var/www/html

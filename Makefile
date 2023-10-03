@@ -1,17 +1,35 @@
-all:
-	docker compose -f ./srcs/docker-compose.yml -d --build
+NAME = Inception
+
+DOCK_COMP = ./srcs/docker-compose.yml
+
+$(NAME): build run
+
+all: $(NAME)
+
+build:
+	-mkdir -p /home/gponcele/data/mariadb
+	-mkdir -p /home/gponcele/data/wordpress
+	docker compose -f $(DOCK_COMP) build
+
+run:
+	-docker compose -f $(DOCK_COMP) up -d
 
 down:
-	docker compose -f ./srcs/docker-compose.yml down
+	docker compose -f $(DOCK_COMP) down
 
-up:
-	@docker compose -f ./srcs/docker-compose.yml up
+clean: down
+	docker rm -f wordpress
+	docker rm -f nginx
+	docker rm -f mariadb
+	docker rmi srcs-wordpress
+	docker rmi srcs-nginx
+	docker rmi srcs-mariadb
+	docker system prune
 
-clean:
-	docker rm -f $(docker ps -qa); \
-	docker system prune --volume -fa
+re:
+	clean all
 
 deep: clean
 	rm -rf ~/data
 
-.PHONY all re down clean deep
+.PHONY: build run down clean re deep
