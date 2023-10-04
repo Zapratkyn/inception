@@ -2,13 +2,18 @@
 
 sleep 10
 
+sed -i "s|listen = /run/php/php7.4-fpm|sock|listen = 9000|g" /etc/php/7.4/fpm/pool.d/www.conf
+
 if [ ! -e /var/www/wordpress/wp-config.php ] 
 then
+
+	wp core download --allow-root --path=/var/www/wordpress/
+
 	wp config create --allow-root \
 		--dbname=$SQL_DATABASE \
 		--dbuser=$SQL_USER \
 		--dbpass=$SQL_PASSWORD \
-		--dbhost=mariadb:3306 \
+		--dbhost=mariadb \
 	       	--path='/var/www/wordpress'
 
 	sleep 2
@@ -25,13 +30,16 @@ then
 		--role=author \
 		$USER1_LOGIN \
 		$USER1_MAIL \
-		--user_password=$USER1_PASSWORD \
+		--user_pass=$USER1_PASSWORD \
 		--path='/var/www/wordpress' >> /log.txt
 
+else
+	echo "Wordpress is already installed and configured"
 fi
 
 if [ ! -d /run/php ] 
 then
 	mkdir ./run/php
 fi
-/usr/sbin/php-fpm7.4 -F
+
+php-fpm7.4 --nodaemonize

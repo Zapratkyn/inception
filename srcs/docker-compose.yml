@@ -8,7 +8,7 @@ services:
       - "443:443"
     restart: on-failure
     volumes: 
-      - wp:/usr/share/nginx/html/
+      - wp:/var/www/wordpress
     networks: 
       - inception
     depends_on: 
@@ -31,7 +31,7 @@ services:
     build: ./requirements/mariadb
     env_file: .env
     expose:
-      - "3306"
+      - "3306:3306"
     volumes: 
       - /home/gponcele/data/mariadb:/var/lib/mysql/
     restart: unless-stopped

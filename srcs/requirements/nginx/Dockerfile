@@ -17,9 +17,10 @@ RUN openssl req -x509 \
 	-keyout /etc/nginx/ssl/inception.key \
 	-subj "/C=BE/ST=BR-C/L=BR/O=19/OU=19/CN=gponcele.42.fr/UID=gponcele"
 
-COPY conf/nginx.conf /etc/nginx/conf.d
+COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-RUN chmod 755 /var/www/html \
-	&& chown -R www-data:www-data /var/www/html
+RUN mkdir -p /var/www/wordpress \
+	&& chmod 755 /var/www/wordpress \
+	&& chown -R www-data:www-data /var/www/wordpress
 
 CMD ["nginx", "-g", "daemon off;"]
