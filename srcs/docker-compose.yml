@@ -18,7 +18,7 @@ services:
     build: ./requirements/wordpress
     env_file: .env
     restart: on-failure
-    expose:
+    ports:
       - "9000"
     volumes: 
       - wp:/var/www/wordpress
@@ -30,8 +30,8 @@ services:
     container_name: mariadb
     build: ./requirements/mariadb
     env_file: .env
-    expose:
-      - "3306:3306"
+    ports:
+            - "3306:3306"
     volumes: 
       - /home/gponcele/data/mariadb:/var/lib/mysql/
     restart: unless-stopped

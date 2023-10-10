@@ -1,9 +1,9 @@
-FROM debian:oldstable
+FROM debian:bullseye
 
 RUN apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y wget \
-	php7.4 \
+	php \
 	php-fpm \
 	php-mysql \
 	mariadb-client \
@@ -11,14 +11,7 @@ RUN apt-get update \
 
 RUN mkdir -p /run/php/
 
-#RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
-
-#RUN cd /var/www \
-#	&& tar -xzf wordpress-6.0-fr_FR.tar.gz \
-#	&& rm wordpress-6.0-fr_FR.tar.gz \
-#	&& chown -R root:root /var/www/wordpress
-
-#COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& chmod +x wp-cli.phar \
@@ -28,12 +21,10 @@ COPY tools/auto_config.sh /usr/local/bin
 
 RUN chmod +x /usr/local/bin/auto_config.sh
 
+EXPOSE 9000
+
 WORKDIR /var/www/wordpress/
 
 CMD ["sh", "/usr/local/bin/auto_config.sh"]
 
-#WORKDIR /var/www/html/
-
-#EXPOSE 9000
-
-#CMD ["/usr/sbin/php-fpm7.4", "-F"]
+CMD ["/usr/sbin/php-fpm7.4", "-F"]

@@ -1,4 +1,4 @@
-FROM debian:oldstable
+FROM debian:bullseye
 
 EXPOSE 443
 

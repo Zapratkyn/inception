@@ -1,21 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ -d /var/lib/mysql/$SQL_DATABASE ]
-then
-	echo "DB $SQL_DATABASE already exists..."
-else
+echo "DROP DATABASE IF EXISTS test;
+CREATE DATABASE IF NOT EXISTS ${SQL_DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+CREATE USER IF NOT EXISTS '${SQL_USER}'@'localhost'IDENTIFIED BY '${SQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${SQL_DATABASE}.* TO '${SQL_USER}'@'%' IDENTIFIED BY '$SQL_PASSWORD}';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR '{SQL_USER}';" > /etc/my.sql
 
-	service mysql start --datadir=/var/lib/mysql
-
-	echo "CREATE DATABASE IF NOT EXISTS $SQL_DATABASE;" | mysql -u root
-	echo "CREATE USER '$SQL_USER'@'%' IDENTIFIED BY '$SQL_PASSWORD';" | mysql -u root
-	echo "GRANT ALL PRIVILEGES ON $SQL_DATABASE.* TO '$SQL_USER'@'%';" | mysql -u root
-	echo "FLUSH PRIVILEGES;" | mariadb -u root
-
-	mysqladmin -u root password $SQL_PASSWORD
-
-	service mysql stop --datadir=/var/lib/mysql
-
-fi
-
-mysqld_safe --datadir=/var/lib/mysql
+mysql_safe --init-file=/etc/my.sql;
