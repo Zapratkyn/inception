@@ -17,14 +17,10 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 	&& chmod +x wp-cli.phar \
 	&& mv wp-cli.phar /usr/local/bin/wp
 
-COPY tools/auto_config.sh /usr/local/bin
+COPY tools/auto_config.sh /tmp/auto_config.sh
 
-RUN chmod +x /usr/local/bin/auto_config.sh
-
-EXPOSE 9000
+RUN chmod +x /tmp/auto_config.sh
 
 WORKDIR /var/www/wordpress/
 
-CMD ["sh", "/usr/local/bin/auto_config.sh"]
-
-CMD ["/usr/sbin/php-fpm7.4", "-F"]
+CMD ["sh", "/tmp/auto_config.sh"]

@@ -1,11 +1,8 @@
 FROM debian:bullseye
 
-EXPOSE 443
-
 RUN apt-get update \
 	&& apt-get upgrade -y \
-	&& apt-get install nginx -y \
-	&& apt-get install openssl -y \
+	&& apt-get install -y nginx openssl \
 	&& apt-get clean
 
 RUN mkdir -p /etc/nginx/ssl \

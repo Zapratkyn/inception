@@ -3,16 +3,12 @@ FROM debian:bullseye
 RUN apt update \
 	&& apt upgrade -y \
 	&& apt install mariadb-server -y \
-	&& apt install systemctl -y \
 	&& apt clean
 
-RUN mkdir -p /var/run/mysqld \
-	&& chown -R mysql:mysql /var/run/mysqld \
-	&& chown -R mysql:mysql /etc/mysql
+COPY conf/my.cnf /etc/mysql/my.cnf
 
-EXPOSE 3306
-
-COPY conf/mariadb.cnf /etc/mysql/
+RUN chown mysql:mysql /etc/mysql/my.cnf \
+	&& chmod 600 /etc/mysql/my.cnf
 
 COPY tools/configure.sh /tmp/configure.sh
 

@@ -2,17 +2,17 @@
 
 sleep 5
 
-ls -la
-
 if [ ! -f ./wp-config.php ]; then
 
 	wp core download --allow-root --path=/var/www/wordpress/
+
+	sleep 5
 
 	wp config create --allow-root \
 		--dbname=$SQL_DATABASE \
 		--dbuser=$SQL_USER \
 		--dbpass=$SQL_PASSWORD \
-		--dbhost=mariadb:3306 \
+		--dbhost=$SQL_HOST \
 		--path='/var/www/wordpress'
 
 	wp core install --allow-root \
@@ -31,9 +31,4 @@ else
 	echo "Wordpress is already installed and configured"
 fi
 
-if [ ! -d /run/php ] 
-then
-	mkdir ./run/php
-fi
-
-#php-fpm7.4 --nodaemonize
+php-fpm7.4 -F
